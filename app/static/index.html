@@ -170,7 +170,7 @@
 
 <header>
   <div>
-    <h1>🏎 F1 Race Predictor</h1>
+    <h1>F1 Race Predictor</h1>
     <span>Предсказание финишного порядка · Machine Learning</span>
   </div>
 </header>
@@ -209,7 +209,6 @@
     </div>
   </div>
 
-  <!-- Информация о модели -->
   <div class="card">
     <h2>Модель</h2>
     <button onclick="loadModelInfo()">Обновить</button>
@@ -217,7 +216,6 @@
     <div class="model-info" id="model-info" style="margin-top:16px"></div>
   </div>
 
-  <!-- Обучение -->
   <div class="card">
     <h2>Обучение</h2>
     <div class="controls">
@@ -265,12 +263,12 @@
       }).join('');
 
       st.className = 'status ok';
-      st.textContent = `✓ Модель: ${d.model_used} · ${d.prediction.length} гонщиков`;
+      st.textContent = `Модель: ${d.model_used} · ${d.prediction.length} гонщиков`;
       tbl.style.display = 'block';
 
     } catch(e) {
       st.className = 'status err';
-      st.textContent = '✗ ' + e.message;
+      st.textContent = '' + e.message;
     }
   }
 
@@ -323,7 +321,6 @@
     }
   }
 
-  // Загружаем инфо о модели при открытии
   loadModelInfo();
 </script>
 </body>
