@@ -141,7 +141,7 @@ def model_info():
     if not COMPARISON_PATH.exists():
         raise HTTPException(
             status_code=404,
-            detail="Модель не обучена. Вызови POST /train"
+            detail="Модель не обучена. Обучите модель ниже."
         )
     with open(COMPARISON_PATH) as f:
         return json.load(f)
@@ -161,7 +161,7 @@ def train(background_tasks: BackgroundTasks, years: str = "2023,2024,2025"):
     return {
         "status":  "started",
         "message": f"Обучение запущено для сезонов: {year_list}",
-        "tip":     "Статус смотри в /model/info после завершения"
+        "tip":     "Обновите модель через 3-4 минуты."
     }
 
 

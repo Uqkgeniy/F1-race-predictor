@@ -98,15 +98,40 @@ def get_qualifying_results(year: int, round_num: int) -> pd.DataFrame:
     data = _jolpica_get(url)
     races = data.get("RaceTable", {}).get("Races", [])
 
-    if not races:
-        return pd.DataFrame(columns=["qualiPosition", "code", "constructorId"])
+    quali_results = []
+    if races:
+        results = races[0].get("QualifyingResults", [])
+        quali_results = [{
+            "qualiPosition": int(r["position"]),
+            "code": r["Driver"].get("code", ""),
+            "constructorId": r["Constructor"]["constructorId"]
+        } for r in results]
 
-    results = races[0].get("QualifyingResults", [])
-    return pd.DataFrame([{
-        "qualiPosition": int(r["position"]),
-        "code":          r["Driver"].get("code", ""),
-        "constructorId": r["Constructor"]["constructorId"]
-    } for r in results])
+    all_drivers = get_current_drivers()
+    if all_drivers.empty:
+        return pd.DataFrame()
+
+    standings = get_driver_standings(year, round_num)
+    driver_to_team = dict(zip(standings['code'], standings.get('constructorId', ['unknown'] * len(standings))))
+
+    full_list = []
+    for i, driver in enumerate(all_drivers.itertuples(), 1):
+        code = driver.code
+
+        quali_row = next((q for q in quali_results if q["code"] == code), None)
+
+        row = {
+            "code": code,
+            "constructorId": quali_row["constructorId"] if quali_row else driver_to_team.get(code, "unknown"),
+            "qualiPosition": quali_row["qualiPosition"] if quali_row else i + 20
+        }
+
+        if quali_row:
+            row["qualiPosition"] = quali_row["qualiPosition"]
+
+        full_list.append(row)
+
+    return pd.DataFrame(full_list)
 
 
 def get_race_results(year: int, round_num: int) -> pd.DataFrame:
