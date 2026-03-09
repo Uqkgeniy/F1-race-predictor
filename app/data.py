@@ -1,8 +1,7 @@
 import fastf1
 import requests
 import pandas as pd
-import numpy as np
-from pathlib import Path
+import time
 
 from pathlib import Path
 import os
@@ -21,7 +20,11 @@ JOLPICA_BASE = "https://api.jolpi.ca/ergast/f1"
 def _jolpica_get(url: str) -> dict:
     try:
         resp = requests.get(url, timeout=10)
+        if resp.status_code == 429:
+            time.sleep(5)
+            resp = requests.get(url, timeout=10)
         resp.raise_for_status()
+        time.sleep(0.6)
         return resp.json().get("MRData", {})
     except Exception as e:
         print(f"[Jolpica] Ошибка запроса {url}: {e}")
