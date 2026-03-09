@@ -1,0 +1,12 @@
+cache/
+model.pkl
+trained_rounds.json
+model_comparison.json
+
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+.env
+*.egg-info/
